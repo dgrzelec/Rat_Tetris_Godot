@@ -39,12 +39,13 @@ func _process(delta):
 		elif direction == 1:
 			test_and_move_right()
 
+		if Input.is_action_just_pressed("rotate"):
+			current_piece.rotate(cell_size)
+			
 		if Input.is_action_just_pressed("place"):
 			while not piece_saved:
-				piece_saved = test_and_move_down()
+				test_and_move_down()
 			piece_saved = false
-		if Input.is_action_just_pressed("rotate"):
-			pass
 	else:
 		if game_running:
 			spawn_random_piece()
@@ -68,11 +69,11 @@ func spawn_random_piece():
 	rand_piece_array.push_back(pieces[rand_index])
 	
 func spawn_piece(piece: PackedScene):
-	var new_piece = piece.instance()
-	add_child(new_piece)
-	new_piece.position = $SpawnPoint.position
-	new_piece.initiate(3, 0)
-	current_piece = new_piece
+	current_piece = piece.instance()
+	add_child(current_piece)
+	current_piece.position = $SpawnPoint.position
+	current_piece.initiate(3, 0)
+#	current_piece = new_piece
 	
 	$PieceTimer.start()
 	piece_saved = false
@@ -100,6 +101,9 @@ func test_and_move_right():
 			current_piece.move_left(cell_size)
 
 func test_and_move_down():
+	if not current_piece:
+		print("tried to move null piece")
+		return false
 	#first move down then check and move up if necessary
 	current_piece.move_down(cell_size)
 	var block_to_save = false
@@ -115,6 +119,7 @@ func test_and_move_down():
 		save_piece(current_piece)
 #		spawn_random_piece()
 		current_piece = null
+		piece_saved = true
 	return block_to_save
 	
 func save_piece(piece):
