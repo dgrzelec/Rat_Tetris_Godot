@@ -4,7 +4,7 @@
 [ext_resource path="res://Pieces/LinePiece.gd" type="Script" id=2]
 
 [node name="Piece" type="Node2D" groups=["piece"]]
-position = Vector2( 32, 0 )
+position = Vector2( 48, 0 )
 script = ExtResource( 2 )
 
 [node name="LL" parent="." instance=ExtResource( 1 )]

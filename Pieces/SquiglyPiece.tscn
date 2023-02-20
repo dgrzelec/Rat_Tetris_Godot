@@ -3,7 +3,7 @@
 [ext_resource path="res://Block.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Pieces/SquiglyPiece.gd" type="Script" id=2]
 
-[node name="Piece" type="Node2D" groups=["piece"]]
+[node name="Piece2" type="Node2D" groups=["piece"]]
 position = Vector2( 48, 16 )
 script = ExtResource( 2 )
 

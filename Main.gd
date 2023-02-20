@@ -2,6 +2,10 @@ extends Node
 
 export var cell_size = 32 #px
 
+export var piece_queue = 3
+export var queue_spacing = 80
+var rand_piece_array = []
+
 var game_running = false
 var score = 0
 
@@ -18,9 +22,6 @@ var pieces = [preload("res://Pieces/SquarePiece.tscn"), preload("res://Pieces/LP
 			preload("res://Pieces/LinePiece.tscn"), preload("res://Pieces/ReverseLPiece.tscn"),\
 			preload("res://Pieces/ReverseSquiglyPiece.tscn"), preload("res://Pieces/SquiglyPiece.tscn"),\
 			preload("res://Pieces/TPiece.tscn")]
-
-var piece_queue = 1
-var rand_piece_array = []
 
 func _ready():
 	randomize()
@@ -57,6 +58,7 @@ func start_game():
 		rand_piece_array.push_back(pieces[rand_index])
 	spawn_random_piece()
 	game_running = true
+	fill_queue()
 
 func end_game():
 	game_running = false
@@ -68,6 +70,8 @@ func spawn_random_piece():
 	spawn_piece(rand_piece_array.pop_front())
 	var rand_index = rand_range(0, len(pieces))
 	rand_piece_array.push_back(pieces[rand_index])
+	
+	fill_queue()
 	
 func spawn_piece(piece: PackedScene):
 	current_piece = piece.instance()
@@ -190,6 +194,18 @@ func erase_line(line_y):
 				blocks_dic[lowered_key].move_down(cell_size)
 				blocks_dic[key].delete()
 				blocks_dic.erase(key)
+
+func fill_queue():
+	var children = $QueueSpawnPoint.get_children()
+	for node in children:
+		node.queue_free()
+	
+	for i in piece_queue:
+		var temp_piece = rand_piece_array[i].instance()
+		$QueueSpawnPoint.add_child(temp_piece)
+		temp_piece.position.y += i * queue_spacing
+		if i > 0:
+			temp_piece.scale *= 0.7
 
 func _on_Walls_body_entered(body):
 	pass # Replace with function body.
