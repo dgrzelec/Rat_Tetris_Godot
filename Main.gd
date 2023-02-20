@@ -39,12 +39,13 @@ func _process(delta):
 		elif direction == 1:
 			test_and_move_right()
 
+		if Input.is_action_just_pressed("rotate"):
+			current_piece.rotate(cell_size)
+			
 		if Input.is_action_just_pressed("place"):
 			while not piece_saved:
 				piece_saved = test_and_move_down()
 			piece_saved = false
-		if Input.is_action_just_pressed("rotate"):
-			pass
 	else:
 		if game_running:
 			spawn_random_piece()
@@ -114,6 +115,7 @@ func test_and_move_down():
 		current_piece.move_up(cell_size)
 		save_piece(current_piece)
 #		spawn_random_piece()
+		$PieceTimer.stop()
 		current_piece = null
 	return block_to_save
 	
