@@ -28,11 +28,29 @@ func move_right(increment):
 	for block in blocks:
 		block.move_right(increment)
 
-func rotate(_increment):
-	pass
-	
-func rotate_back(_increment):
-	pass
+var rotation_id = 0
+var rotation_vecs = [
+				[-Vector2(-1,1), -Vector2.ONE,-Vector2(-1, -1),Vector2.ZERO],
+				[Vector2.ZERO, Vector2.ONE,Vector2.ZERO,Vector2.ZERO],
+				[Vector2(-1,1), Vector2.ZERO, Vector2.ZERO, Vector2.ZERO],
+				[Vector2.ZERO, Vector2.ZERO, Vector2(-1, -1), Vector2.ZERO]]
+
+
+func rotate(increment):
+	rotation_id += 1
+	if rotation_id > 3:
+		rotation_id = 0
+	#apply rotation
+	for i in 4:
+		var mod_vec = rotation_vecs[rotation_id][i]
+		blocks[i].rotation_degrees = 90 * rotation_id	
+		blocks[i].position += mod_vec * increment
+		blocks[i].x += mod_vec.x
+		blocks[i].y += mod_vec.y
+		
+func rotate_back(increment):
+	for i in 3:
+		rotate(increment)
 	
 func get_blocks():
 	return blocks.duplicate(true)

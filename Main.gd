@@ -40,7 +40,8 @@ func _process(delta):
 			test_and_move_right()
 
 		if Input.is_action_just_pressed("rotate"):
-			current_piece.rotate(cell_size)
+
+			test_and_rotate()
 			
 		if Input.is_action_just_pressed("place"):
 			while not piece_saved:
@@ -78,6 +79,19 @@ func spawn_piece(piece: PackedScene):
 	$PieceTimer.start()
 	piece_saved = false
 
+func test_and_rotate():
+	current_piece.rotate(cell_size)
+	var undo_move = false
+	for block in current_piece.blocks:
+		if (x_left > block.x) or (block.x > x_right):
+			undo_move = true
+		elif (y_up > block.y) or (block.y > y_bottom):
+			undo_move = true
+		elif blocks_dic.has(Vector2(block.x, block.y)):
+			undo_move = true
+	if undo_move:
+		current_piece.rotate_back(cell_size)
+
 func test_and_move_left():
 	current_piece.move_left(cell_size)
 	var undo_move = false
@@ -87,7 +101,7 @@ func test_and_move_left():
 		elif blocks_dic.has(Vector2(block.x, block.y)):
 			undo_move = true
 	if undo_move:
-			current_piece.move_right(cell_size)
+		current_piece.move_right(cell_size)
 
 func test_and_move_right():
 	current_piece.move_right(cell_size)
@@ -118,6 +132,7 @@ func test_and_move_down():
 		current_piece.move_up(cell_size)
 		save_piece(current_piece)
 #		spawn_random_piece()
+		$PieceTimer.stop()
 		current_piece = null
 		piece_saved = true
 	return block_to_save

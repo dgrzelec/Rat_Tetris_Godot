@@ -50,11 +50,13 @@ func move_right(increment):
 #	return true
 	
 func rotate(_increment):
-	pass
+	for i in 4:
+		blocks[i].rotation_degrees += 90
 	
 func rotate_back(_increment):
-	pass
-	
+	for i in 4:
+		blocks[i].rotation_degrees -= 90
+		
 func get_blocks():
 	return blocks.duplicate(true)
 
